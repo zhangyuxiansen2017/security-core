@@ -1,6 +1,7 @@
 package cn.zhangguimin.security.core.controller;
 
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,6 +29,7 @@ public class LoginController {
     /**
      * 可以直接  getCurrentUser(Authentication  authentication) 直接return authentication，这样会返回很多没必要的数据
      * 			可以使用 @AuthenticationPrincipal UserDetails user。返回的只是UserDetails信息
+     * 在任何地方获取：UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
      * @param user
      * @return
      */
