@@ -38,4 +38,6 @@ public class LoginController {
     public Object getCurrentUser(@AuthenticationPrincipal UserDetails user) {
         return user;
     }
+
+
 }

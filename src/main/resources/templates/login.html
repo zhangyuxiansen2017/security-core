@@ -1,14 +1,18 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>登录</title>
 </head>
 <body>
     <form action="/login" method="post">
+        <p style="color: red" th:text="${session.SPRING_SECURITY_LAST_EXCEPTION.message}" th:if="${param.error}"></p>
         <input type="text" name="username" value="admin">
         <br>
         <input type="password" name="password" value="123456">
+        <br>
+        <input type="text" name="code"> <img src="/captchaImage?type=char" style="width: 100px;height: 20px;">
+        <br>
         <input type="submit">
     </form>
 </body>

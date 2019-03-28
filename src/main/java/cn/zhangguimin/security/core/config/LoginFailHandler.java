@@ -21,6 +21,8 @@ public class LoginFailHandler extends SimpleUrlAuthenticationFailureHandler {
     @Override
     public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException, ServletException {
         System.out.println("处理登录失败需要做的。。。。。。。");
+        request.setAttribute("msg","验证码错误");
+        setDefaultFailureUrl("/login?error");
         super.onAuthenticationFailure(request, response, exception);
     }
 }

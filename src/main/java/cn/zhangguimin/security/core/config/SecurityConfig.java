@@ -7,6 +7,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 /**
  * @author Mr. Zhang
@@ -33,14 +34,18 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
      */
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.formLogin()
+        ValidateCaptchaFilter validateCaptchaFilter = new ValidateCaptchaFilter();
+        validateCaptchaFilter.setAuthenticationFailureHandler(loginFailHandler);
+        http.addFilterBefore(validateCaptchaFilter, UsernamePasswordAuthenticationFilter.class)
+                .formLogin()
                 .loginPage("/login")
                 .loginProcessingUrl("/login")
+                .failureUrl("/login?error")
                 .successHandler(loginSuccessHandler)
                 .failureHandler(loginFailHandler)
                 .and()
                 .authorizeRequests()
-                .antMatchers("/login").permitAll()
+                .antMatchers("/login","/captchaImage").permitAll()
                 .anyRequest()
                 .authenticated()
                 .and()
@@ -48,6 +53,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .disable();
     }
 
+    /**
+     * 使用PasswordEncoder加密解密密码，
+     *         优点：相同密码每次都会产生不同值
+     * @return
+     */
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
