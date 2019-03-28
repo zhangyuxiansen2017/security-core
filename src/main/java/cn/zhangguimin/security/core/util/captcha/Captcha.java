@@ -1,29 +1,39 @@
 package cn.zhangguimin.security.core.util.captcha;
 
 import lombok.Data;
-
-import java.io.Serializable;
-import java.time.LocalDateTime;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 
 /**
  * @author Mr. Zhang
- * @description 图片存储
+ * @description 验证码参数
  * @date 2019/3/28 13:47
  * @website https://www.zhangguimin.cn
  */
 @Data
-public class Captcha implements Serializable {
+@ConfigurationProperties(prefix = "zgm.captcha")
+public class Captcha {
 
-    private String code;
+    private String code = "captchaCode";
 
-    private LocalDateTime expireTime;
+    private String validity = "120";
 
-    public boolean isExpried() {
-        return LocalDateTime.now().isAfter(expireTime);
-    }
+    private String border = "yes";
 
-    public Captcha( String code, int expireTime) {
-        this.code = code;
-        this.expireTime = LocalDateTime.now().plusSeconds(expireTime);
-    }
+    private String borderColor = "105,179,90";
+
+    private String fontColor = "blue";
+
+    private String imageWidth = "200";
+
+    private String imageHeight = "40";
+
+    private String fontSize = "38";
+
+    private String charSpac = "5";
+
+    private String charLength = "6";
+
+    private String fontNames = "Arial,Courier";
+
+    private String noiseColor = "white";
 }

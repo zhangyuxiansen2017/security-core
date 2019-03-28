@@ -41,3 +41,8 @@ spring:
     database: 0
     port: 6388
     password: 1991820
+zgm:
+  captcha:
+    code: code
+    imageWidth: 180
+    imageHeight: 50

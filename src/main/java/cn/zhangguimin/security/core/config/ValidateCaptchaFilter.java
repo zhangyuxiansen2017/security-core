@@ -1,8 +1,7 @@
 package cn.zhangguimin.security.core.config;
 
 import cn.zhangguimin.security.core.exception.ValidateCaptchaException;
-import cn.zhangguimin.security.core.util.captcha.Captcha;
-import org.springframework.context.annotation.Configuration;
+import com.google.code.kaptcha.Constants;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.ServletRequestBindingException;
@@ -15,6 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.time.LocalDateTime;
 
 /**
  * @author Mr. Zhang
@@ -26,8 +26,6 @@ public class ValidateCaptchaFilter extends OncePerRequestFilter {
 
 
     private AuthenticationFailureHandler authenticationFailureHandler;
-
-    public final static String KAPTCHA_SESSION_KEY = "KAPTCHA_SESSION_KEY";
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
@@ -47,7 +45,9 @@ public class ValidateCaptchaFilter extends OncePerRequestFilter {
 
         HttpSession session = request.getSession();
 
-        Captcha captcha = (Captcha) session.getAttribute(KAPTCHA_SESSION_KEY);
+        String captcha = (String) session.getAttribute("code");
+        LocalDateTime ldt = (LocalDateTime) session.getAttribute(Constants.KAPTCHA_SESSION_DATE);
+        boolean isExpried = ldt.isBefore(LocalDateTime.now());
 
         String codeInRequest;
         try {
@@ -64,16 +64,17 @@ public class ValidateCaptchaFilter extends OncePerRequestFilter {
             throw new ValidateCaptchaException("验证码不存在");
         }
 
-        if (captcha.isExpried()) {
-            session.removeAttribute(KAPTCHA_SESSION_KEY);
+        if (isExpried) {
+            session.removeAttribute(Constants.KAPTCHA_SESSION_KEY);
+            session.removeAttribute(Constants.KAPTCHA_SESSION_DATE);
             throw new ValidateCaptchaException("验证码已过期");
         }
 
-        if (!codeInRequest.equals(captcha.getCode())) {
+        if (!codeInRequest.equals(captcha)) {
             throw new ValidateCaptchaException("验证码不匹配");
         }
-
-        session.removeAttribute(KAPTCHA_SESSION_KEY);
+        session.removeAttribute(Constants.KAPTCHA_SESSION_KEY);
+        session.removeAttribute(Constants.KAPTCHA_SESSION_DATE);
     }
 
     public AuthenticationFailureHandler getAuthenticationFailureHandler() {
