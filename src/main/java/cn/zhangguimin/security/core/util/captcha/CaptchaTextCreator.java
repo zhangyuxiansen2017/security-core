@@ -10,7 +10,7 @@ import java.util.Random;
  * @date 2019-03-28 11:47
  * @website https://www.zhangguimin.cn
  */
-public class KaptchaTextCreator extends DefaultTextCreator {
+public class CaptchaTextCreator extends DefaultTextCreator {
 
     private static final String[] CNUMBERS = "0,1,2,3,4,5,6,7,8,9,10".split(",");
 

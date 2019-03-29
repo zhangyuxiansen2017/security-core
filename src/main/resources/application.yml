@@ -17,7 +17,7 @@ spring:
   #数据源配置 --德鲁伊连接池
   datasource:
     type: com.alibaba.druid.pool.DruidDataSource
-    url: jdbc:mysql://118.31.4.246:3306/boot_db?useSSL=false
+    url: jdbc:mysql://118.31.4.246:3306/boot_db?useSSL=false&serverTimezone=Asia/Shanghai
     username: zhangguimin
     password: 1991820
     druid:
@@ -43,6 +43,10 @@ spring:
     password: 1991820
 zgm:
   captcha:
+    type: char
+    charLength: 5
     code: code
     imageWidth: 180
     imageHeight: 50
+    noiseColor: black
+    #textproducerImpl: cn.zhangguimin.security.core.util.captcha.CaptchaTextCreator

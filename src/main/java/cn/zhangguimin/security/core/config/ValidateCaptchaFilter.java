@@ -77,10 +77,6 @@ public class ValidateCaptchaFilter extends OncePerRequestFilter {
         session.removeAttribute(Constants.KAPTCHA_SESSION_DATE);
     }
 
-    public AuthenticationFailureHandler getAuthenticationFailureHandler() {
-        return authenticationFailureHandler;
-    }
-
     public void setAuthenticationFailureHandler(AuthenticationFailureHandler authenticationFailureHandler) {
         this.authenticationFailureHandler = authenticationFailureHandler;
     }
