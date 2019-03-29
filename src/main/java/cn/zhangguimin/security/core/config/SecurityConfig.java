@@ -29,6 +29,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private LoginFailHandler loginFailHandler;
     @Autowired
+    private SmsCodeAuthenticationSecurityConfig smsCodeAuthenticationSecurityConfig;
+    @Autowired
     private UserDetailsService userDetailsService;
     @Autowired
     private DataSource dataSource;
@@ -50,6 +52,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         validateCaptchaFilter.setAuthenticationFailureHandler(loginFailHandler);
             http
                 .addFilterBefore(validateCaptchaFilter, UsernamePasswordAuthenticationFilter.class)
+                .apply(smsCodeAuthenticationSecurityConfig)
+                .and()
                 .formLogin()
                 .loginPage("/login")
                 .loginProcessingUrl("/login")
