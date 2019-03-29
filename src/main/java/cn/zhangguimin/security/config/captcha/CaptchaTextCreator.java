@@ -1,4 +1,4 @@
-package cn.zhangguimin.security.core.util.captcha;
+package cn.zhangguimin.security.config.captcha;
 
 import com.google.code.kaptcha.text.impl.DefaultTextCreator;
 

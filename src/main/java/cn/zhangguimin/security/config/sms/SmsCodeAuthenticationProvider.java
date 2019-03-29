@@ -1,4 +1,4 @@
-package cn.zhangguimin.security.core.config;
+package cn.zhangguimin.security.config.sms;
 
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;

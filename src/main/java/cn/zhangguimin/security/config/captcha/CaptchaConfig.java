@@ -1,4 +1,4 @@
-package cn.zhangguimin.security.core.util.captcha;
+package cn.zhangguimin.security.config.captcha;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;

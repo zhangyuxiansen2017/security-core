@@ -1,4 +1,4 @@
-package cn.zhangguimin.security.core.exception;
+package cn.zhangguimin.security.exception;
 
 import org.springframework.security.core.AuthenticationException;
 

@@ -1,6 +1,6 @@
-package cn.zhangguimin.security.core.config;
+package cn.zhangguimin.security.config;
 
-import cn.zhangguimin.security.core.exception.ValidateCaptchaException;
+import cn.zhangguimin.security.exception.ValidateCaptchaException;
 import com.google.code.kaptcha.Constants;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.util.StringUtils;

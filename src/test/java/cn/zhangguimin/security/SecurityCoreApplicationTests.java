@@ -1,4 +1,4 @@
-package cn.zhangguimin.security.core;
+package cn.zhangguimin.security;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

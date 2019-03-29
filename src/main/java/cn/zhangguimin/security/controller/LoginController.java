@@ -1,4 +1,4 @@
-package cn.zhangguimin.security.core.controller;
+package cn.zhangguimin.security.controller;
 
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
