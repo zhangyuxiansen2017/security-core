@@ -1,11 +1,13 @@
 package cn.zhangguimin.security.config.sms;
 
+import cn.zhangguimin.security.config.properties.SecurityConstants;
+import cn.zhangguimin.security.config.properties.SecurityProperties;
 import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
-import org.springframework.util.Assert;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -17,17 +19,14 @@ import javax.servlet.http.HttpServletResponse;
  */
 public class SmsCodeAuthenticationFilter extends AbstractAuthenticationProcessingFilter {
 
-    private static final String DEFAULT_PARAMETER_NAME_MOBILE = "mobile";
-
-    private static final String DEFAULT_LOGIN_PROCESSING_URL_MOBILE = "/mobile";
-
-    private String mobileParameter = DEFAULT_PARAMETER_NAME_MOBILE;
-
     private boolean postOnly = true;
 
+    private SecurityProperties securityProperties;
 
-    public SmsCodeAuthenticationFilter() {
-        super(new AntPathRequestMatcher(DEFAULT_LOGIN_PROCESSING_URL_MOBILE, "POST"));
+
+    public SmsCodeAuthenticationFilter(SecurityProperties securityProperties) {
+        super(new AntPathRequestMatcher(securityProperties.getSms().getProcessingUrl(), "POST"));
+        this.securityProperties=securityProperties;
     }
 
     @Override
@@ -57,27 +56,13 @@ public class SmsCodeAuthenticationFilter extends AbstractAuthenticationProcessin
      * 获取手机号
      *
      * @param request
-     * @return
+     * @return security
      */
     protected String obtainMobile(HttpServletRequest request) {
-        return request.getParameter(mobileParameter);
+        return request.getParameter(SecurityConstants.DEFAULT_PARAMETER_NAME_LOGIN_NAME);
     }
 
     protected void setDetails(HttpServletRequest request, SmsCodeAuthenticationToken authRequest) {
         authRequest.setDetails(authenticationDetailsSource.buildDetails(request));
     }
-
-    public void setMobileParameter(String mobileParameter) {
-        Assert.hasText(mobileParameter, "Username parameter must not be empty or null");
-        this.mobileParameter = mobileParameter;
-    }
-
-    public void setPostOnly(boolean postOnly) {
-        this.postOnly = postOnly;
-    }
-
-    public final String getMobileParameter() {
-        return mobileParameter;
-    }
-
 }

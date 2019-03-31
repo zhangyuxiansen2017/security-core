@@ -1,5 +1,6 @@
 package cn.zhangguimin.security.config;
 
+import cn.zhangguimin.security.config.properties.SecurityProperties;
 import cn.zhangguimin.security.config.sms.SmsCodeAuthenticationSecurityConfig;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -9,7 +10,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.authentication.preauth.AbstractPreAuthenticatedProcessingFilter;
 import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
 import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
 
@@ -33,6 +34,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private UserDetailsService userDetailsService;
     @Autowired
+    private ValidateCodeFilter validateCodeFilter;
+    @Autowired
+    private SecurityProperties securityProperties;
+    @Autowired
     private DataSource dataSource;
 
 
@@ -48,15 +53,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
      */
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        ValidateCaptchaFilter validateCaptchaFilter = new ValidateCaptchaFilter();
-        validateCaptchaFilter.setAuthenticationFailureHandler(loginFailHandler);
             http
-                .addFilterBefore(validateCaptchaFilter, UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(validateCodeFilter, AbstractPreAuthenticatedProcessingFilter.class)
                 .apply(smsCodeAuthenticationSecurityConfig)
                 .and()
                 .formLogin()
                 .loginPage("/login")
-                .loginProcessingUrl("/login")
+                .loginProcessingUrl(securityProperties.getCaptcha().getProcessingUrl())
                 .failureUrl("/login?error")
                 .successHandler(loginSuccessHandler)
                 .failureHandler(loginFailHandler)
@@ -69,7 +72,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
 
                 .authorizeRequests()
-                .antMatchers("/login", "/captchaImage").permitAll()
+                .antMatchers("/login",securityProperties.getCaptcha().getUrl(),securityProperties.getCaptcha().getProcessingUrl(),securityProperties.getSms().getUrl(),securityProperties.getSms().getProcessingUrl()).permitAll()
                 .anyRequest()
                 .authenticated()
                 .and()

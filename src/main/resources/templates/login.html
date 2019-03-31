@@ -5,15 +5,23 @@
     <title>登录</title>
 </head>
 <body>
-    <form action="/login" method="post">
-        <p style="color: red" th:text="${session.SPRING_SECURITY_LAST_EXCEPTION.message}" th:if="${param.error}"></p>
-        <input type="text" name="username" value="admin">
+    <p style="color: red" th:text="${session.SPRING_SECURITY_LAST_EXCEPTION.message}" th:if="${param.error}"></p>
+    <form action="/authentication/form" method="post">
+        登录名：<input type="text" name="username" value="admin">
         <br>
-        <input type="password" name="password" value="123456">
+        密码 ：<input type="password" name="password" value="123456">
         <br>
-        <input type="text" name="code"> <img src="/captchaImage?type=char" style="width: 100px;height: 30px;">
+        <input type="text" name="captchaCode"> <img src="/image" style="width: 100px;height: 30px;">
         <br>
         <input type="checkbox" name="remember-me" value="true">记住我
+        <br>
+        <input type="submit">
+    </form>
+
+    <form action="/authentication/mobile" method="post">
+        手机号：<input type="text" name="username" value="17313108556">
+        <br>
+        验证码：<input type="text" name="smsCode"><a href="/mobile?mobile=17313108556">发送短信</a>
         <br>
         <input type="submit">
     </form>

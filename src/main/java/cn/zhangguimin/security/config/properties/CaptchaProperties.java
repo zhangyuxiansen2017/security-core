@@ -1,23 +1,18 @@
-package cn.zhangguimin.security.config.captcha;
+package cn.zhangguimin.security.config.properties;
 
 import lombok.Data;
-import org.springframework.boot.context.properties.ConfigurationProperties;
 
 /**
  * @author Mr. Zhang
- * @description 验证码参数
- * @date 2019/3/28 13:47
+ * @description 短信properties
+ * @date 2019-03-29 19:45
  * @website https://www.zhangguimin.cn
+ * Unread field:
  */
 @Data
-@ConfigurationProperties(prefix = "zgm.captcha")
-public class CaptchaProperties {
+public class CaptchaProperties extends BaseProperties{
 
     private String type = "char";
-
-    private String code = "captchaCode";
-
-    private String validity = "120";
 
     private String border = "yes";
 
@@ -31,8 +26,6 @@ public class CaptchaProperties {
 
     private String fontSize = "38";
 
-    private String charLength = "6";
-
     private String fontNames = "Arial,Courier";
 
     private String noiseColor = "white";
@@ -42,4 +35,12 @@ public class CaptchaProperties {
     private String noiseImpl = "";
 
     private String obscurificatorImpl = "";
+
+    public CaptchaProperties(){
+        setCodeLength("6");
+        setCode("captchaCode");
+        setProcessingUrl("/authentication/form");
+        setUrl("/image");
+    }
+
 }

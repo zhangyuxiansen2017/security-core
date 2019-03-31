@@ -1,6 +1,8 @@
 package cn.zhangguimin.security.service.impl;
 
+import cn.zhangguimin.security.exception.ValidateCaptchaException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -23,6 +25,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+
         String password = passwordEncoder.encode("123456");
         return new User(username,
                 password,

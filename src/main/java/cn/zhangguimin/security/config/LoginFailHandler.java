@@ -18,6 +18,8 @@ import java.io.IOException;
 @Component
 public class LoginFailHandler extends SimpleUrlAuthenticationFailureHandler {
 
+
+
     @Override
     public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException, ServletException {
         System.out.println("处理登录失败需要做的。。。。。。。");

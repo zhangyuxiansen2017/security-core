@@ -1,7 +1,10 @@
 package cn.zhangguimin.security.config.captcha;
 
+import cn.zhangguimin.security.config.properties.SecurityConstants;
+import cn.zhangguimin.security.config.properties.SecurityProperties;
 import com.google.code.kaptcha.Producer;
 import com.google.code.kaptcha.util.Config;
+import org.apache.commons.lang.StringUtils;
 
 import javax.imageio.ImageIO;
 import javax.servlet.Servlet;
@@ -28,12 +31,10 @@ public class CaptchaServlet extends HttpServlet implements Servlet {
 
     private String sessionKeyValue = null;
 
-    private String sessionKeyDateValue = null;
+    private SecurityProperties securityProperties;
 
-    private CaptchaProperties captcha;
-
-    public CaptchaServlet(CaptchaProperties captcha) {
-        this.captcha = captcha;
+    public CaptchaServlet(SecurityProperties properties) {
+        this.securityProperties = properties;
     }
 
     @Override
@@ -41,31 +42,30 @@ public class CaptchaServlet extends HttpServlet implements Servlet {
 
         super.init(conf);
         Properties properties = new Properties();
-        properties.setProperty("kaptcha.border", captcha.getBorder());
-        properties.setProperty("kaptcha.border.color", captcha.getBorderColor());
+        properties.setProperty("kaptcha.border", securityProperties.getCaptcha().getBorder());
+        properties.setProperty("kaptcha.border.color", securityProperties.getCaptcha().getBorderColor());
 
-        properties.setProperty("kaptcha.textproducer.font.size", captcha.getFontSize());
-        properties.setProperty("kaptcha.textproducer.font.color", captcha.getFontColor());
-        properties.setProperty("kaptcha.textproducer.char.spac", captcha.getType().equals("char") ? "35":"5");
-        properties.setProperty("kaptcha.textproducer.char.length", captcha.getCharLength());
-        properties.setProperty("kaptcha.textproducer.font.names", captcha.getFontNames());
-        properties.setProperty("kaptcha.textproducer.impl", captcha.getTextproducerImpl());
+        properties.setProperty("kaptcha.textproducer.font.size", securityProperties.getCaptcha().getFontSize());
+        properties.setProperty("kaptcha.textproducer.font.color", securityProperties.getCaptcha().getFontColor());
+        properties.setProperty("kaptcha.textproducer.char.spac", securityProperties.getCaptcha().getType().equals("char") ? "35":"5");
+        properties.setProperty("kaptcha.textproducer.char.length", securityProperties.getCaptcha().getCodeLength());
+        properties.setProperty("kaptcha.textproducer.font.names", securityProperties.getCaptcha().getFontNames());
+        properties.setProperty("kaptcha.textproducer.impl", securityProperties.getCaptcha().getTextproducerImpl());
 
-        properties.setProperty("kaptcha.image.width", captcha.getImageWidth());
-        properties.setProperty("kaptcha.image.height", captcha.getImageHeight());
+        properties.setProperty("kaptcha.image.width", securityProperties.getCaptcha().getImageWidth());
+        properties.setProperty("kaptcha.image.height", securityProperties.getCaptcha().getImageHeight());
 
-        properties.setProperty("kaptcha.session.key", captcha.getCode());
-        properties.setProperty("kaptcha.noise.color", captcha.getNoiseColor());
-        properties.setProperty("kaptcha.noise.impl", captcha.getNoiseImpl());
+        properties.setProperty("kaptcha.session.key", securityProperties.getCaptcha().getCode());
+        properties.setProperty("kaptcha.noise.color", securityProperties.getCaptcha().getNoiseColor());
+        properties.setProperty("kaptcha.noise.impl", securityProperties.getCaptcha().getNoiseImpl());
 
-        properties.setProperty("kaptcha.obscurificator.impl", captcha.getObscurificatorImpl());
+        properties.setProperty("kaptcha.obscurificator.impl", securityProperties.getCaptcha().getObscurificatorImpl());
 
         ImageIO.setUseCache(false);
 
         Config config = new Config(properties);
         this.captchaProducer = config.getProducerImpl();
         this.sessionKeyValue = config.getSessionKey();
-        this.sessionKeyDateValue = config.getSessionDate();
     }
 
     @Override
@@ -80,7 +80,7 @@ public class CaptchaServlet extends HttpServlet implements Servlet {
         String capStr = null;
         String code = null;
         BufferedImage bi = null;
-        if ("math".equals(captcha.getType())) {
+        if (StringUtils.equals(securityProperties.getCaptcha().getType(),"math")) {
             String capText = captchaProducer.createText();
             capStr = capText.substring(0, capText.lastIndexOf("@"));
             code = capText.substring(capText.lastIndexOf("@") + 1);
@@ -91,7 +91,7 @@ public class CaptchaServlet extends HttpServlet implements Servlet {
         }
 
         req.getSession().setAttribute(this.sessionKeyValue, code);
-        req.getSession().setAttribute(this.sessionKeyDateValue, LocalDateTime.now().plusSeconds(Integer.valueOf(captcha.getValidity())));
+        req.getSession().setAttribute(SecurityConstants.SESSION_KEY_DATE, LocalDateTime.now().plusSeconds(Integer.valueOf(securityProperties.getCaptcha().getValidity())));
 
         ServletOutputStream out = resp.getOutputStream();
         ImageIO.write(bi, "jpeg", out);

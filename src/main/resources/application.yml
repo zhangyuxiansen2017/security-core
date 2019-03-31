@@ -1,5 +1,5 @@
 server:
-  port: 8080
+  port: 8090
 #spring配置
 spring:
   #国际化
@@ -41,12 +41,19 @@ spring:
     database: 0
     port: 6388
     password: 1991820
+security:
+  oauth2:
+    client:
+      client-secret: zgmsecret
+      client-id: zgmid
+
 zgm:
-  captcha:
-    type: char
-    charLength: 5
-    code: code
-    imageWidth: 180
-    imageHeight: 50
-    noiseColor: black
-    #textproducerImpl: cn.zhangguimin.security.core.util.captcha.CaptchaTextCreator
+  security:
+    captcha:
+      type: math
+      charLength: 5
+      code: captchaCode
+      imageWidth: 180
+      imageHeight: 50
+      noiseColor: black
+      textproducerImpl: cn.zhangguimin.security.config.captcha.CaptchaTextCreator

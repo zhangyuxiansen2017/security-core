@@ -1,5 +1,8 @@
 package cn.zhangguimin.security.controller;
 
+import cn.zhangguimin.security.config.properties.SecurityProperties;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -15,6 +18,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
  */
 @Controller
 public class LoginController {
+    @Autowired
+    private SecurityProperties securityProperties;
 
     @GetMapping(value = "/login")
     public String login(){
@@ -38,6 +43,4 @@ public class LoginController {
     public Object getCurrentUser(@AuthenticationPrincipal UserDetails user) {
         return user;
     }
-
-
 }
